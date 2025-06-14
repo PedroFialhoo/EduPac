@@ -3,6 +3,7 @@ import pygame_gui
 import pygame_gui.ui_manager
 from settings import Colors
 from .phantom import Phantom
+from .maze import Maze
 
 class Game:
     def __init__(self):
@@ -45,6 +46,7 @@ class Game:
         
         self.font = pygame.font.SysFont(None, 100)
         self.p = Phantom(self.screen)
+        self.m = Maze(self.screen)
 
         
     def event_controller(self):
@@ -78,6 +80,7 @@ class Game:
             self.end_button.hide()
             self.p.update()
             self.p.show_phantom()
+            self.m.draw_maze()
             
             
         if self.status == self.END:
