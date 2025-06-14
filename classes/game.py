@@ -1,7 +1,8 @@
 import pygame
 import pygame_gui
 import pygame_gui.ui_manager
-from settings.colors import Colors
+from settings import Colors
+from .phantom import Phantom
 
 class Game:
     def __init__(self):
@@ -43,6 +44,7 @@ class Game:
         )
         
         self.font = pygame.font.SysFont(None, 100)
+        self.p = Phantom(self.screen)
 
         
     def event_controller(self):
@@ -71,10 +73,12 @@ class Game:
             
             
         if self.status == self.PLAYING:   
-            self.screen.fill(Colors.DARK_BLUE)
-            text = self.font.render('Jogando', True, Colors.YELLOW)
-            self.screen.blit(text, (350, 150))
+            self.screen.fill(Colors.BLACK)
             self.start_button.hide()
+            self.end_button.hide()
+            self.p.update()
+            self.p.show_phantom()
+            
             
         if self.status == self.END:
             pygame.quit()
