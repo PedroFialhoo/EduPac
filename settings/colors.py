@@ -22,4 +22,4 @@ class Colors:
     # Cores para background ou temas
     BACKGROUND = (30, 30, 30)  # Fundo escuro
     LIGHT_BLUE = (173, 216, 230)  # Azul claro
-    DARK_BLUE = (0, 0, 139)  # Azul escuro
+    DARK_BLUE = (0, 0, 55)  # Azul escuro
