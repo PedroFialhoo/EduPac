@@ -4,6 +4,9 @@ import pygame_gui.ui_manager
 from settings import Colors
 from .phantom import Phantom
 from .maze import Maze
+from .questions import Questions
+import random
+from .player import Player
 
 class Game:
     def __init__(self):
@@ -45,8 +48,20 @@ class Game:
         )
         
         self.font = pygame.font.SysFont(None, 100)
-        self.p = Phantom(self.screen)
+        self.font2 = pygame.font.SysFont(None, 50)
         self.m = Maze(self.screen)
+        self.phantoms = [
+            Phantom(self.screen, self.m, 40, 120),     # canto superior esquerdo
+            Phantom(self.screen, self.m, 920, 120),    # canto superior direito
+            Phantom(self.screen, self.m, 40, 740),     # canto inferior esquerdo
+            Phantom(self.screen, self.m, 920, 740),    # canto inferior direito
+            ]
+
+                
+        self.q = Questions()
+        self.q.run()
+
+        self.player = Player(self.screen, self.m)
 
         
     def event_controller(self):
@@ -62,6 +77,9 @@ class Game:
                     self.status = self.PLAYING
                 if event.ui_element == self.end_button:
                     self.status = self.END
+            if event.type == pygame.KEYDOWN and self.status == self.PLAYING:
+                self.player.walk_player(event.key)
+
                     
     
     def status_controller(self):
@@ -78,9 +96,18 @@ class Game:
             self.screen.fill(Colors.BLACK)
             self.start_button.hide()
             self.end_button.hide()
-            self.p.update()
-            self.p.show_phantom()
-            self.m.draw_maze()
+            for phantom in self.phantoms:
+                phantom.update()
+                phantom.show_phantom()
+
+            self.m.draw_maze()       
+            text = self.font.render(f"{self.q.n2} {self.q.symbol} {self.q.n1} = ?", True, Colors.YELLOW)
+            self.screen.blit(text, (20, 0))
+            
+            self.draw_answer_options()
+            self.player.showplayer()
+
+
             
             
         if self.status == self.END:
@@ -92,10 +119,31 @@ class Game:
         self.manager.update(1/60)
         self.manager.draw_ui(self.screen) 
         pygame.display.flip()
+
+    def draw_answer_options(self):
+        pygame.draw.rect(self.screen,Colors.BLACK,((12, 85), (55,30)))
+        pygame.draw.rect(self.screen,Colors.BLACK,((935, 85),(55,30)))
+        pygame.draw.rect(self.screen,Colors.BLACK,((12, 740), (55,30)))
+        pygame.draw.rect(self.screen,Colors.BLACK,((935, 740),(55,30)))
+        options = self.q.wrong_answer.copy()
+        options.append(self.q.answer)
+        positions = [
+        (12, 85),
+        (935, 85),
+        (12, 740),
+        (935, 740)
+        ]
+        for i in range(4):            
+            text = self.font2.render(f"{options[i]}", True, Colors.YELLOW)
+            self.screen.blit(text, positions[i])        
+
     
-    def run(self):
+    def run(self):       
         while self.running:
             self.event_controller()
+            keys = pygame.key.get_pressed()
+            if self.status == self.PLAYING:
+                self.player.walk_player(keys)
             self.status_controller()
             self.update_screen()
     
