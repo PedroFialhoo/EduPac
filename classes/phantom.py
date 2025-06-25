@@ -4,19 +4,22 @@ import pygame_gui
 import pygame_gui.ui_manager
 from settings import *
 import time
+from .maze import Maze
 
 class Phantom:
-    def __init__(self, screen):
+    def __init__(self, screen, maze, start_x, start_y):
         self.WIDTH_PHANTOM = 40
         self.HEIGHT_PHANTOM = 40
-        self.x_phantom = 300
-        self.y_phantom = 300
+        self.x_phantom = start_x
+        self.y_phantom = start_y
         self.color = Colors.WHITE
         self.screen = screen
         self.walking = True
         self.last_move_time = time.time()
         self.last_direction = None        
         self.image = pygame.image.load("images/phantom.png")
+        self.maze = maze.maze  
+
 
     def update(self):
         current_time = time.time()
@@ -37,22 +40,33 @@ class Phantom:
         random.shuffle(directions)
 
         for direction in directions:
-            if direction == 'up' and self.y_phantom - 40 >= 0:
-                self.y_phantom -= 40
+            new_x = self.x_phantom
+            new_y = self.y_phantom
+
+            if direction == 'up':
+                new_y -= 40
+            elif direction == 'down':
+                new_y += 40
+            elif direction == 'left':
+                new_x -= 40
+            elif direction == 'right':
+                new_x += 40
+
+            new_rect = pygame.Rect(new_x, new_y, self.WIDTH_PHANTOM, self.HEIGHT_PHANTOM)
+
+            # Verifica se colide com alguma parede
+            collision = False
+            for wall in self.maze:
+                if new_rect.colliderect(wall):
+                    collision = True
+                    break
+
+            if not collision:
+                self.x_phantom = new_x
+                self.y_phantom = new_y
                 self.last_direction = direction
-                break
-            elif direction == 'down' and self.y_phantom + 40 <= self.screen.get_height() - self.HEIGHT_PHANTOM:
-                self.y_phantom += 40
-                self.last_direction = direction
-                break
-            elif direction == 'left' and self.x_phantom - 40 >= 0:
-                self.x_phantom -= 40
-                self.last_direction = direction
-                break
-            elif direction == 'right' and self.x_phantom + 40 <= self.screen.get_width() - self.WIDTH_PHANTOM:
-                self.x_phantom += 40
-                self.last_direction = direction
-                break
+                break  # achou uma direção válida, para de tentar
+
 
             
     def damage(self):
