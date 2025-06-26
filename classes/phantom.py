@@ -66,10 +66,14 @@ class Phantom:
                 self.y_phantom = new_y
                 self.last_direction = direction
                 break  # achou uma direção válida, para de tentar
-
-
             
-    def damage(self):
-        pass
+    def damage(self, player, game):
+        phantom = pygame.Rect(self.x_phantom, self.y_phantom, self.WIDTH_PHANTOM, self.HEIGHT_PHANTOM)
+        if phantom.colliderect(player.player_rect):
+            game.reset()
+            player.damage()
+            print('Levou Dano, vida atual', player.life)                   
+            player.x_player = 480
+            player.y_player = 337
     
     

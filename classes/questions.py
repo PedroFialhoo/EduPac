@@ -29,15 +29,12 @@ class Questions:
             self.symbol = '*'
 
         elif self.current_operation == 4:
-            self.answer = round(self.n2 / self.n1, 1)
-            self.symbol = '/'
+            self.answer = self.n2 // self.n1
+            self.symbol = '//'
 
     def generate_wrong_answers(self):
-        self.wrong_answer = []
-        while len(self.wrong_answer) < 3:
-            fake = random.randint(1, 30)
-            if fake != self.answer and fake not in self.wrong_answer:
-                self.wrong_answer.append(fake)
+        self.wrong_answer = [self.answer + 3, self.answer - 5, self.answer + 7 ]
+        
 
     def run(self):
         self.generate_numbers()
