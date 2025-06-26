@@ -7,6 +7,7 @@ from .maze import Maze
 from .questions import Questions
 import random
 from .player import Player
+from .heart import Heart
 
 class Game:
     def __init__(self):
@@ -16,7 +17,8 @@ class Game:
         self.running = True
         self.START = 1
         self.PLAYING = 2
-        self.END = 3
+        self.FINISH_GAME = 3
+        self.END = 4
         
         self.status = self.START
           
@@ -62,7 +64,32 @@ class Game:
         self.q.run()
 
         self.player = Player(self.screen, self.m)
+        self.answer_rects = []
+        self.prepare_answers()
+        self.last_answer_time = 0
+        self.answer_cooldown = 1000  # milissegundos
+        self.hearts = Heart(self.screen)
+        self.pontuation = 0
 
+
+
+    def reset(self):
+        self.q = Questions()
+        self.q.run()
+        self.answer_rects = []
+        self.phantoms = [
+        Phantom(self.screen, self.m, 40, 120),
+        Phantom(self.screen, self.m, 920, 120),
+        Phantom(self.screen, self.m, 40, 740),
+        Phantom(self.screen, self.m, 920, 740),
+    ]
+        self.prepare_answers()
+
+    def prepare_answers(self):
+        options = self.q.wrong_answer.copy()
+        options.append(self.q.answer)
+        random.shuffle(options)
+        self.shuffled_options = options
         
     def event_controller(self):
         for event in pygame.event.get():
@@ -74,11 +101,25 @@ class Game:
                 self.running = False
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.start_button:
+                    if self.status == self.FINISH_GAME:
+                        self.player = Player(self.screen, self.m)   # zera vida
+                        self.pontuation = 0                         # zera pontuação
+                        self.reset()                                # nova pergunta e fantasmas
                     self.status = self.PLAYING
                 if event.ui_element == self.end_button:
                     self.status = self.END
-            if event.type == pygame.KEYDOWN and self.status == self.PLAYING:
-                self.player.walk_player(event.key)
+                    
+        if self.status == self.PLAYING:
+            keys = pygame.key.get_pressed()
+
+            if keys[pygame.K_UP] or keys[pygame.K_w]:
+                self.player.walk_player(pygame.K_UP)
+            elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+                self.player.walk_player(pygame.K_DOWN)
+            elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                self.player.walk_player(pygame.K_LEFT)
+            elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                self.player.walk_player(pygame.K_RIGHT)
 
                     
     
@@ -106,9 +147,22 @@ class Game:
             
             self.draw_answer_options()
             self.player.showplayer()
-
-
+            self.player.collision_answer(self.q, self.answer_rects, self)
+            for phantom in self.phantoms:
+                phantom.damage(self.player, self)
             
+            if self.player.life == 0:
+                self.status = self.FINISH_GAME
+            
+            self.hearts.draw(self.player.life)
+
+        if self.status == self.FINISH_GAME:
+            self.screen.fill(Colors.NAVY)
+            self.screen.blit(self.image, (0, 0))
+            text = self.font.render(f'Pontuação final: {self.pontuation}', True, Colors.YELLOW)
+            self.screen.blit(text, (180, 150))
+            self.start_button.show()
+            self.end_button.show()
             
         if self.status == self.END:
             pygame.quit()
@@ -121,22 +175,25 @@ class Game:
         pygame.display.flip()
 
     def draw_answer_options(self):
-        pygame.draw.rect(self.screen,Colors.BLACK,((12, 85), (55,30)))
-        pygame.draw.rect(self.screen,Colors.BLACK,((935, 85),(55,30)))
-        pygame.draw.rect(self.screen,Colors.BLACK,((12, 740), (55,30)))
-        pygame.draw.rect(self.screen,Colors.BLACK,((935, 740),(55,30)))
-        options = self.q.wrong_answer.copy()
-        options.append(self.q.answer)
+        self.answer_rects = []
         positions = [
-        (12, 85),
-        (935, 85),
-        (12, 740),
-        (935, 740)
+            (12, 85),
+            (935, 85),
+            (12, 740),
+            (935, 740)
         ]
-        for i in range(4):            
-            text = self.font2.render(f"{options[i]}", True, Colors.YELLOW)
-            self.screen.blit(text, positions[i])        
 
+        for i in range(4):
+            rect = pygame.Rect(positions[i], (55, 30))
+            pygame.draw.rect(self.screen, Colors.BLACK, rect)
+
+            text = self.font2.render(f"{self.shuffled_options[i]}", True, Colors.YELLOW)
+            self.screen.blit(text, positions[i])
+
+            self.answer_rects.append({
+                "rect": rect,
+                "text": self.shuffled_options[i]
+            })   
     
     def run(self):       
         while self.running:
