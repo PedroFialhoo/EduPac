@@ -48,9 +48,9 @@ O jogo é finalizado em três situações:
    - cd edupac
 2. Crie e ative um ambiente virtual:
    - python -m venv venv
-    # Windows:
+- **Windows:**
    - venv\Scripts\activate
-    # macOS/Linux:
+- **macOS/Linux:**
    - source venv/bin/activate
 3. Instale as dependências do jogo:
    - pip install -r requirements.txt
