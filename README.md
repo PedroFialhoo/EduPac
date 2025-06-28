@@ -37,7 +37,7 @@ O jogo é finalizado em três situações:
 
 ## 🗂 Organização do projeto
 
-- Organização em **classes separadas por funcionalidades**).
+- Organização em **pastas separadas por funcionalidades** (ex.: assets, core, entities).
 - Utilização de **ambiente virtual Python** para facilitar a instalação e execução do projeto.
 - Controle de versões via **GitHub**.
 
