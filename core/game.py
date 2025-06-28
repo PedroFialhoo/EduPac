@@ -69,7 +69,7 @@ class Game:
         self.last_answer_time = 0
         self.answer_cooldown = 1000  # milissegundos
         self.hearts = Heart(self.screen)
-        self.pontuation = 900
+        self.pontuation = 0
         self.lvl = LevelController()
         self.current_level = 1
 
