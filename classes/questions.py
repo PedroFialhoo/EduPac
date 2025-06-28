@@ -4,7 +4,7 @@ class Questions:
     def __init__(self):
         self.n1 = 0
         self.n2 = 0
-        self.operation = (1,2,3,4)
+        self.operation = [1,2]
         self.current_operation = 0
         self.answer = 0
         self.wrong_answer = []
@@ -31,11 +31,21 @@ class Questions:
         elif self.current_operation == 4:
             self.answer = self.n2 // self.n1
             self.symbol = '//'
+            
+        elif self.current_operation == 5:
+            self.answer = self.n2 ** self.n1
+            self.symbol = '^'
 
     def generate_wrong_answers(self):
         self.wrong_answer = [self.answer + 3, self.answer - 5, self.answer + 7 ]
         
 
+    def change_level(self, game):
+        if game.current_level == 2:
+            self.operation = [1,2,3,4]
+        if game.current_level == 3:
+            self.operation = [1,2,3,4,5]
+            
     def run(self):
         self.generate_numbers()
         self.generete_question()
@@ -45,3 +55,4 @@ class Questions:
         print('operação', self.current_operation)
         print('resposta', self.answer)
         print('respostas erradas', self.wrong_answer)
+        print('operações = ', self.operation)

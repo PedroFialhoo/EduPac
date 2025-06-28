@@ -5,7 +5,7 @@ from .maze import Maze
 class Player:
     def __init__(self, screen, maze):
         self.WIDTH_PLAYER = 40
-        self.HEIGHT_PLAYER = 40
+        self.HEIGHT_PLAYER = 30
         self.x_player = 480
         self.y_player = 337
         self.color = Colors.WHITE
@@ -71,7 +71,7 @@ class Player:
                 resposta = rect["text"]
                 if resposta == questions.answer:
                     print("Resposta correta!")
-                    game.pontuation += 1
+                    game.pontuation += 100
                 else:
                     print("Resposta errada!")
                     self.damage()
