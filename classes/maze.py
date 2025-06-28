@@ -22,8 +22,8 @@ class Maze:
     # Corredores laterais 
     pygame.Rect(100, 500, 200, 10),
     pygame.Rect(700, 500, 200, 10),
-    pygame.Rect(100, 500, 10, 200),
-    pygame.Rect(900, 500, 10, 200),
+    pygame.Rect(100, 500, 10, 195),
+    pygame.Rect(900, 500, 10, 195),
 
     # Centro horizontal
     pygame.Rect(300, 400, 400, 10),

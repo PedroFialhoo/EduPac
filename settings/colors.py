@@ -14,7 +14,7 @@ class Colors:
     DARK_GREEN = (0, 100, 0)  # Verde escuro
     LIGHT_GREEN = (144, 238, 144)  # Verde claro
     ORANGE = (255, 165, 0)
-    GRAY = (169, 169, 169)
+    GRAY = (90, 90, 90)
     PINK = (255, 182, 193)
     PURPLE = (128, 0, 128)
     BROWN = (139, 69, 19)

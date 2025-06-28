@@ -8,6 +8,7 @@ from .questions import Questions
 import random
 from .player import Player
 from .heart import Heart
+from .level_controller import LevelController
 
 class Game:
     def __init__(self):
@@ -50,6 +51,7 @@ class Game:
         )
         
         self.font = pygame.font.SysFont(None, 100)
+        self.font_level = pygame.font.SysFont(None, 70)
         self.font2 = pygame.font.SysFont(None, 50)
         self.m = Maze(self.screen)
         self.phantoms = [
@@ -69,12 +71,12 @@ class Game:
         self.last_answer_time = 0
         self.answer_cooldown = 1000  # milissegundos
         self.hearts = Heart(self.screen)
-        self.pontuation = 0
-
+        self.pontuation = 900
+        self.lvl = LevelController()
+        self.current_level = 1
 
 
     def reset(self):
-        self.q = Questions()
         self.q.run()
         self.answer_rects = []
         self.phantoms = [
@@ -154,7 +156,13 @@ class Game:
             if self.player.life == 0:
                 self.status = self.FINISH_GAME
             
-            self.hearts.draw(self.player.life)
+            self.hearts.draw(self.player.life)                         
+            self.lvl.change_level(self.pontuation, self)
+            self.q.change_level(self)
+            
+            text_level = self.font_level.render(f"Level {self.current_level}", True, Colors.YELLOW)
+            self.screen.blit(text_level, (500, 20))
+            
 
         if self.status == self.FINISH_GAME:
             self.screen.fill(Colors.NAVY)
@@ -179,8 +187,8 @@ class Game:
         positions = [
             (12, 85),
             (935, 85),
-            (12, 740),
-            (935, 740)
+            (12, 760),
+            (935, 760)
         ]
 
         for i in range(4):
@@ -194,7 +202,9 @@ class Game:
                 "rect": rect,
                 "text": self.shuffled_options[i]
             })   
+          
     
+            
     def run(self):       
         while self.running:
             self.event_controller()
