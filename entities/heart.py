@@ -3,8 +3,8 @@ import pygame
 class Heart:
     def __init__(self, screen):
         self.screen = screen
-        self.heart_full = pygame.image.load("images/heart.png") 
-        self.heart_empty = pygame.image.load("images/heart2.png")
+        self.heart_full = pygame.image.load("assets/images/heart.png") 
+        self.heart_empty = pygame.image.load("assets/images/heart2.png")
         self.WIDTH_HEART= 40
         self.HEIGHT_HEART = 40
 

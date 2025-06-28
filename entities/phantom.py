@@ -4,7 +4,7 @@ import pygame_gui
 import pygame_gui.ui_manager
 from settings import *
 import time
-from .maze import Maze
+import core
 
 class Phantom:
     def __init__(self, screen, maze, start_x, start_y):
@@ -17,7 +17,7 @@ class Phantom:
         self.walking = True
         self.last_move_time = time.time()
         self.last_direction = None        
-        self.image = pygame.image.load("images/phantom.png")
+        self.image = pygame.image.load("assets/images/phantom.png")
         self.maze = maze.maze  
 
 

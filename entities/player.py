@@ -1,6 +1,6 @@
 from settings import *
 import pygame
-from .maze import Maze
+import core
 
 class Player:
     def __init__(self, screen, maze):
@@ -12,10 +12,10 @@ class Player:
         self.screen = screen
         self.walking = True
         self.last_direction = None        
-        self.img_up = pygame.image.load("images/student-front.png")
-        self.img_right = pygame.image.load("images/student-right.png")
-        self.img_down = pygame.image.load("images/student-back.png")
-        self.img_left = pygame.image.load("images/student-left.png")
+        self.img_up = pygame.image.load("assets/images/student-front.png")
+        self.img_right = pygame.image.load("assets/images/student-right.png")
+        self.img_down = pygame.image.load("assets/images/student-back.png")
+        self.img_left = pygame.image.load("assets/images/student-left.png")
         self.maze = maze.maze  
         self.current_img = self.img_up
         self.step_delay = 400 

@@ -2,12 +2,10 @@ import pygame
 import pygame_gui
 import pygame_gui.ui_manager
 from settings import Colors
-from .phantom import Phantom
+from entities import Phantom, Player, Heart
 from .maze import Maze
 from .questions import Questions
 import random
-from .player import Player
-from .heart import Heart
 from .level_controller import LevelController
 
 class Game:
@@ -32,7 +30,7 @@ class Game:
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption('EduPac')
         
-        self.image = pygame.image.load("images/background.png")
+        self.image = pygame.image.load("assets/images/background.png")
         
         self.manager = pygame_gui.UIManager((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), "settings/themes.json")
         
